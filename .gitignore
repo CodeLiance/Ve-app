@@ -19,3 +19,7 @@
 **/build/
 **/.expo/
 **/*.tsbuildinfo
+
+# Backend y landing viven en sus propios repos (CodeLiance/Ve-back, CodeLiance/Ve-landing)
+/USCback/
+/USClanding/
