@@ -42,7 +42,7 @@ done
 
 # Start Native app (Expo / Metro)
 echo -e "${BLUE}Starting Native app (Expo)...${NC}"
-cd "$SCRIPT_DIR/uscConnet"
+cd "$SCRIPT_DIR"
 npx expo start > /tmp/uscconnet-expo.log 2>&1 &
 EXPO_PID=$!
 disown $EXPO_PID

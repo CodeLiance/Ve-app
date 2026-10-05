@@ -1,6 +1,6 @@
 # Publicación de Ve! en App Store y Google Play
 
-Guía para llevar Ve! (`uscConnet` + `USCback` + `USClanding`) a las tiendas sin rechazos.
+Guía para llevar Ve! a las tiendas sin rechazos. La app vive en la raíz de este repo; el backend (`USCback/…`) está en [CodeLiance/Ve-back](https://github.com/CodeLiance/Ve-back) y la landing (`USClanding/…`) en [CodeLiance/Ve-landing](https://github.com/CodeLiance/Ve-landing).
 Última revisión: 2 de octubre de 2026.
 
 - **Parte 1** — lo que ya quedó resuelto en el código.
@@ -14,22 +14,22 @@ Guía para llevar Ve! (`uscConnet` + `USCback` + `USClanding`) a las tiendas sin
 
 | Tema | Qué se hizo | Dónde |
 |---|---|---|
-| Identidad de la app | Nombre visible **Ve!**, ícono y splash propios (fondo negro, "Ve!" ámbar). Se eliminaron los íconos de la plantilla de Expo, que causan rechazo. | `uscConnet/app.json`, `uscConnet/assets/images/` |
-| Android | Paquete `com.juanvallejo01.uscconnet`, ícono adaptativo y monocromo, permiso de micrófono bloqueado (la app no lo usa). | `uscConnet/app.json` |
-| Permisos iOS | Textos en español que explican para qué se usan la cámara y las fotos (Apple rechaza textos genéricos). | `uscConnet/app.json` (plugin `expo-image-picker`) |
-| Cifrado | `ITSAppUsesNonExemptEncryption: false`: la app solo usa HTTPS estándar, así que no hay que llenar el formulario de exportación en cada build. | `uscConnet/app.json` |
-| Builds | `eas.json` con perfiles `preview` (pruebas internas, APK) y `production` (tiendas). El número de build lo lleva EAS solo. | `uscConnet/eas.json` |
-| Dependencias | Paquetes actualizados a las versiones exactas del SDK 57 (incluye el arreglo de una regresión de Hermes que podía cerrar la app en builds de release). `expo-doctor`: 21/21. | `uscConnet/package.json` |
+| Identidad de la app | Nombre visible **Ve!**, ícono y splash propios (fondo negro, "Ve!" ámbar). Se eliminaron los íconos de la plantilla de Expo, que causan rechazo. | `app.json`, `assets/images/` |
+| Android | Paquete `com.juanvallejo01.uscconnet`, ícono adaptativo y monocromo, permiso de micrófono bloqueado (la app no lo usa). | `app.json` |
+| Permisos iOS | Textos en español que explican para qué se usan la cámara y las fotos (Apple rechaza textos genéricos). | `app.json` (plugin `expo-image-picker`) |
+| Cifrado | `ITSAppUsesNonExemptEncryption: false`: la app solo usa HTTPS estándar, así que no hay que llenar el formulario de exportación en cada build. | `app.json` |
+| Builds | `eas.json` con perfiles `preview` (pruebas internas, APK) y `production` (tiendas). El número de build lo lleva EAS solo. | `eas.json` |
+| Dependencias | Paquetes actualizados a las versiones exactas del SDK 57 (incluye el arreglo de una regresión de Hermes que podía cerrar la app en builds de release). `expo-doctor`: 21/21. | `package.json` |
 | Borrar cuenta | Ahora es **definitivo**: borra usuario, fotos, posts, comentarios, likes, matches y mensajes, y ajusta el ranking de los demás. Antes solo marcaba `deletedAt`, guardaba todos los datos y dejaba el correo bloqueado para siempre. Requisito de Apple 5.1.1(v), de Google Play y de la Ley 1581. | `USCback/src/modules/users/users.service.ts` |
 | Seguridad | Se eliminó `POST /api/auth/create-admin`, que era **público**: cualquiera podía crearse una cuenta de administrador. | `USCback/src/modules/auth/` |
-| Términos y privacidad | Páginas `/terminos` y `/privacidad` en la landing (Ley 1581, tolerancia cero con contenido abusivo, reportes en 24 h, borrado de cuenta, edad mínima). Enlazadas desde el registro y desde Perfil → Configuración. | `USClanding/app/terminos`, `USClanding/app/privacidad`, `uscConnet/src/constants/legal.ts` |
+| Términos y privacidad | Páginas `/terminos` y `/privacidad` en la landing (Ley 1581, tolerancia cero con contenido abusivo, reportes en 24 h, borrado de cuenta, edad mínima). Enlazadas desde el registro y desde Perfil → Configuración. | `USClanding/app/terminos`, `USClanding/app/privacidad`, `src/constants/legal.ts` |
 | Contenido de usuarios | Ya existían: reportar usuario, bloquear, borrar cuenta, y el panel admin con reportes reales (`adminApi.getReports`). Es lo que exige Apple 1.2. | app y backend |
 | Cuenta de revisión | Script que crea una cuenta **ya verificada** (no pide código por correo) con 2 matches y chats de ejemplo, para que el revisor pruebe todo. | `USCback/prisma/create-review-account.ts` (`npm run review:account`) |
 | Estabilidad del backend | Si Neon cortaba una conexión inactiva, el backend **se caía entero** (error `pg` sin manejar). Ahora se registra el aviso, se reintenta una vez y el tiempo de conexión pasó de 2 s a 10 s para cuando Neon "despierta". | `USCback/src/common/database/postgres.service.ts` |
-| Contraseñas | Mínimo 8 caracteres, una mayúscula y un carácter especial. Lo exige el backend al registrarse y al restablecer la contraseña, y la app lo muestra en vivo mientras escribes. El login no cambia: las cuentas existentes siguen entrando. | `USCback/src/modules/auth/dto/auth.dto.ts`, `uscConnet/src/lib/password-policy.ts` |
+| Contraseñas | Mínimo 8 caracteres, una mayúscula y un carácter especial. Lo exige el backend al registrarse y al restablecer la contraseña, y la app lo muestra en vivo mientras escribes. El login no cambia: las cuentas existentes siguen entrando. | `USCback/src/modules/auth/dto/auth.dto.ts`, `src/lib/password-policy.ts` |
 | Protección del seed | `prisma/seed.ts` borra toda la base; ahora se niega a correr con `NODE_ENV=production`. | `USCback/prisma/seed.ts` |
-| Registro | Paso 1: correo institucional, con la verificación de mínimo 5 s; el correo ya no se puede cambiar después. Paso 2: perfil. Se quitó la nota "verificación disponible próximamente": Apple rechaza funciones marcadas como incompletas, y en producción el código por correo sí está activo. | `uscConnet/src/app/(auth)/index.tsx` |
-| Web | La sesión funciona también en navegador (localStorage) y CORS acepta varios orígenes. No afecta a las tiendas, pero sirve para pruebas. | `uscConnet/src/lib/api-client.ts`, `USCback/src/main.ts` |
+| Registro | Paso 1: correo institucional, con la verificación de mínimo 5 s; el correo ya no se puede cambiar después. Paso 2: perfil. Se quitó la nota "verificación disponible próximamente": Apple rechaza funciones marcadas como incompletas, y en producción el código por correo sí está activo. | `src/app/(auth)/index.tsx` |
+| Web | La sesión funciona también en navegador (localStorage) y CORS acepta varios orígenes. No afecta a las tiendas, pero sirve para pruebas. | `src/lib/api-client.ts`, `USCback/src/main.ts` |
 | Material para Google Play | Ícono 512×512 y gráfico destacado 1024×500. | `docs/store-assets/` |
 
 ---
@@ -86,7 +86,6 @@ La app de producción **no puede** apuntar a `localhost` ni a `http://`: iOS blo
 ### Paso 4 · Configurar EAS (una sola vez)
 
 ```bash
-cd uscConnet
 npx eas-cli login
 npx eas-cli init          # vincula el proyecto y escribe el projectId en app.json
 
@@ -110,7 +109,6 @@ Crea `revision.app@usc.edu.co` ya verificada (inicia sesión **sin** código por
 ### Paso 6 · Generar y enviar los builds
 
 ```bash
-cd uscConnet
 npx eas-cli build --platform ios     --profile production
 npx eas-cli build --platform android --profile production
 npx eas-cli submit --platform ios     --latest   # sube a App Store Connect / TestFlight
@@ -203,7 +201,7 @@ Rastreo (*tracking*): **No**. Todos los datos van **vinculados al usuario** y su
 
 ## Pendientes conocidos (no bloquean la revisión)
 
-- En el panel admin, las pestañas **Usuarios**, **Analítica** y "publicaciones reportadas" muestran **datos de ejemplo** (`uscConnet/src/constants/admin-mock-data.ts`). Los **reportes de usuarios sí son reales**. El revisor no entra al panel admin, pero conviene conectarlas a la API (`adminApi.getUsers`, etc.).
+- En el panel admin, las pestañas **Usuarios**, **Analítica** y "publicaciones reportadas" muestran **datos de ejemplo** (`src/constants/admin-mock-data.ts`). Los **reportes de usuarios sí son reales**. El revisor no entra al panel admin, pero conviene conectarlas a la API (`adminApi.getUsers`, etc.).
 - Reportar se hace sobre **usuarios**, no sobre publicaciones individuales. Es suficiente para Apple 1.2; reportar posts sería una mejora.
 - El build de **Android** no se probó en este equipo (solo iOS en simulador). Pruébalo con un build `preview` en un teléfono real.
 
@@ -211,7 +209,7 @@ Rastreo (*tracking*): **No**. Todos los datos van **vinculados al usuario** y su
 
 ```bash
 ./START.sh                         # backend :3002 + Metro :8081
-cd uscConnet && npx expo run:ios   # app en el simulador
+npx expo run:ios                   # app en el simulador
 ```
 
 Datos de prueba (solo desarrollo, `npm run prisma:seed` **borra la base**): `superadmin@usc.edu` / `AdminUSC2026!` y `student1…20@usc.edu` / `UserUSC2026!`.
