@@ -11,14 +11,16 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://apive.codeliance.co/api"
+        "EXPO_PUBLIC_API_URL": "https://apive.codeliance.co/api",
+        "EXPO_PUBLIC_SITE_URL": "https://ve.codeliance.co"
       }
     },
     "production": {
       "environment": "production",
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://apive.codeliance.co/api"
+        "EXPO_PUBLIC_API_URL": "https://apive.codeliance.co/api",
+        "EXPO_PUBLIC_SITE_URL": "https://ve.codeliance.co"
       }
     }
   },
