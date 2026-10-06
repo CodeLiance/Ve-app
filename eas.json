@@ -9,11 +9,17 @@
       "environment": "preview",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://apive.codeliance.co/api"
       }
     },
     "production": {
       "environment": "production",
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://apive.codeliance.co/api"
+      }
     }
   },
   "submit": {
