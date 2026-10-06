@@ -1,56 +1,57 @@
-# Welcome to your Expo app 👋
+# Ve! — app móvil
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+App nativa de Ve! (iOS y Android) para estudiantes universitarios, hecha con Expo y React Native.
 
-## Get started
+El backend y la landing viven en sus propios repos:
 
-1. Install dependencies
+- Backend (NestJS + Prisma + PostgreSQL): [CodeLiance/Ve-back](https://github.com/CodeLiance/Ve-back)
+- Landing (Next.js): [CodeLiance/Ve-landing](https://github.com/CodeLiance/Ve-landing)
 
-   ```bash
-   npm install
-   ```
+## Stack
 
-2. Start the app
+- Expo SDK 57, React Native 0.86, React 19, TypeScript
+- Expo Router (rutas por archivos en `src/app/`)
+- NativeWind (Tailwind) para estilos
+- Reanimated, Gesture Handler y Bottom Sheet
+- Axios + Zod para la API, i18next para idiomas
+- EAS para builds y envío a las tiendas
 
-   ```bash
-   npx expo start
-   ```
+## Estructura
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+src/
+  app/          Pantallas y rutas (Expo Router): (auth), (tabs), chat, user, admin…
+  components/   Componentes por área (feed, chat, explore, profile, ui, shared…)
+  context/      Estado global (auth, chat, tema, notificaciones…)
+  hooks/        Hooks reutilizables
+  lib/          Cliente de la API, configuración y utilidades
+  constants/    Tema, colores, fuentes, textos legales
+  i18n/         Traducciones
+  types/        Tipos compartidos
+assets/         Íconos, splash e imágenes
+docs/           Guía de publicación en App Store y Google Play
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Empezar
 
-### Other setup steps
+```bash
+npm install
+cp .env.example .env    # pon en EXPO_PUBLIC_API_URL la URL del backend
+npx expo start
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+En un iPhone o Android físico, `localhost` no apunta a tu computador: usa la IP de tu red local
+(por ejemplo `http://192.168.1.71:3002/api`). Más detalles en `.env.example`.
 
-## Learn more
+Para correr el backend y Metro a la vez, `./START.sh` espera el repo del backend clonado en `./USCback`
+(esa carpeta está ignorada por git).
 
-To learn more about developing your project with Expo, look at the following resources:
+## Builds nativos
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npx expo run:ios                 # simulador o iPhone conectado (--device)
+npx expo run:android
+npx eas-cli build --profile production --platform all
+```
 
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+La guía completa para publicar está en [docs/PUBLICACION-TIENDAS.md](docs/PUBLICACION-TIENDAS.md).
